@@ -3,257 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GDC 2026 — Field Notes | Agentic Sciences</title>
+    <title>GDC 2026 — Live Field Notes</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #ffffff;
-            --text: #111111;
-            --muted: #666666;
-            --accent: #2563eb;
-            --accent-light: #eff6ff;
-            --border: #e5e7eb;
-            --card-bg: #fafafa;
-            --max-w: 860px;
+            --bg: #0a0a0f;
+            --bg2: #12121a;
+            --bg3: #1a1a28;
+            --text: #e8e8f0;
+            --muted: #8888a0;
+            --accent: #7c5cfc;
+            --accent2: #ff6b6b;
+            --accent3: #4ecdc4;
+            --accent4: #ffd93d;
+            --glow: rgba(124, 92, 252, 0.15);
+            --border: rgba(255,255,255,0.06);
+            --max-w: 920px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
             -webkit-font-smoothing: antialiased;
         }
+        ::selection { background: var(--accent); color: white; }
+
+        /* Animated gradient bg */
+        .bg-glow {
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(ellipse at 30% 20%, rgba(124,92,252,0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(255,107,107,0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
 
         /* Nav */
         nav {
             position: sticky; top: 0; z-index: 100;
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(12px);
+            background: rgba(10,10,15,0.85);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            padding: 0.8rem 2rem;
+            padding: 0.7rem 2rem;
             display: flex; align-items: center; justify-content: space-between;
         }
-        nav .brand { font-weight: 700; font-size: 0.95rem; letter-spacing: -0.02em; }
-        nav .brand a { color: var(--text); text-decoration: none; }
-        nav .links { display: flex; gap: 1.5rem; font-size: 0.85rem; }
-        nav .links a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+        nav .brand {
+            font-weight: 700; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        nav .live-dot {
+            width: 8px; height: 8px;
+            background: var(--accent2);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,107,107,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255,107,107,0); }
+        }
+        nav .links { display: flex; gap: 1.2rem; font-size: 0.82rem; }
+        nav .links a {
+            color: var(--muted); text-decoration: none;
+            transition: color 0.2s; padding: 0.3rem 0;
+        }
         nav .links a:hover { color: var(--text); }
 
         /* Hero */
         .hero {
-            padding: 5rem 2rem 3rem;
+            position: relative;
+            padding: 6rem 2rem 4rem;
             text-align: center;
-            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            z-index: 1;
         }
-        .hero .badge {
-            display: inline-block;
-            background: var(--accent-light);
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(124,92,252,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .hero .day-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: rgba(124,92,252,0.15);
+            border: 1px solid rgba(124,92,252,0.3);
             color: var(--accent);
             font-size: 0.75rem;
             font-weight: 600;
-            padding: 0.3rem 0.8rem;
+            padding: 0.35rem 1rem;
             border-radius: 100px;
-            margin-bottom: 1.2rem;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.05em;
         }
         .hero h1 {
-            font-size: 2.8rem;
+            font-size: 3.5rem;
             font-weight: 700;
             letter-spacing: -0.04em;
-            line-height: 1.15;
-            margin-bottom: 0.8rem;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #c4b5fd 50%, #7c5cfc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         .hero .subtitle {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             color: var(--muted);
-            max-width: 560px;
+            max-width: 520px;
             margin: 0 auto 1.5rem;
+            font-weight: 300;
         }
-        .hero .meta {
-            font-size: 0.85rem;
-            color: var(--muted);
+        .hero .meta-row {
+            display: flex; justify-content: center; gap: 2rem;
+            font-size: 0.82rem; color: var(--muted);
+            flex-wrap: wrap;
+        }
+        .hero .meta-row span {
+            display: flex; align-items: center; gap: 0.4rem;
         }
 
         /* Container */
-        .container { max-width: var(--max-w); margin: 0 auto; padding: 3rem 2rem; }
-
-        /* Section */
-        .section { margin-bottom: 4rem; }
-        .section h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.4rem;
+        .container {
+            max-width: var(--max-w);
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
-        .section .section-desc {
-            color: var(--muted);
-            font-size: 0.9rem;
-            margin-bottom: 1.8rem;
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--accent), var(--accent3), transparent);
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.35rem; top: 0.6rem;
+            width: 10px; height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+            box-shadow: 0 0 10px var(--accent);
+        }
+        .timeline-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.03em;
         }
 
         /* Cards */
         .card {
-            background: var(--card-bg);
+            background: var(--bg2);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 1.8rem;
-            margin-bottom: 1.2rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            border-color: rgba(124,92,252,0.2);
+            box-shadow: 0 4px 30px var(--glow);
         }
         .card h3 {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.02em;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.01em;
         }
         .card p {
             color: var(--muted);
             font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-        .card blockquote {
-            border-left: 3px solid var(--accent);
-            padding-left: 1rem;
-            margin: 1rem 0;
-            font-style: italic;
-            color: #444;
-            font-size: 0.92rem;
-        }
-        .card .speaker {
-            font-size: 0.8rem;
-            color: var(--accent);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Panel Table */
-        .panel-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.9rem;
-            margin: 1rem 0;
-        }
-        .panel-table th {
-            text-align: left;
-            font-weight: 600;
-            padding: 0.6rem 1rem;
-            border-bottom: 2px solid var(--border);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: var(--muted);
-        }
-        .panel-table td {
-            padding: 0.6rem 1rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        /* Photo Grid */
-        .photo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 0.8rem;
-            margin: 1.5rem 0;
-        }
-        .photo-grid img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .photo-grid img:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        .photo-grid .photo-wide {
-            grid-column: span 2;
-        }
-        .photo-grid .photo-wide img {
-            height: 260px;
-        }
-
-        /* Key Insight */
-        .insight {
-            background: linear-gradient(135deg, #eff6ff, #f0fdf4);
-            border: 1px solid #dbeafe;
-            border-radius: 12px;
-            padding: 1.5rem 1.8rem;
-            margin: 1.5rem 0;
-        }
-        .insight .insight-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
-        }
-        .insight p {
-            font-size: 0.95rem;
-            color: #333;
-        }
-
-        /* Stats */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-        .stat {
-            text-align: center;
-            padding: 1.2rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-        }
-        .stat .number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: -0.03em;
-        }
-        .stat .label {
-            font-size: 0.78rem;
-            color: var(--muted);
-            margin-top: 0.2rem;
         }
 
         /* Tags */
+        .tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0.8rem 0; }
         .tag {
-            display: inline-block;
-            background: var(--accent-light);
-            color: var(--accent);
-            font-size: 0.72rem;
-            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
             padding: 0.2rem 0.6rem;
             border-radius: 4px;
-            margin-right: 0.4rem;
+            font-weight: 500;
+        }
+        .tag-ai { background: rgba(124,92,252,0.15); color: #a78bfa; }
+        .tag-unity { background: rgba(78,205,196,0.15); color: #4ecdc4; }
+        .tag-google { background: rgba(255,217,61,0.15); color: #ffd93d; }
+        .tag-ea { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+        .tag-sony { background: rgba(96,165,250,0.15); color: #60a5fa; }
+
+        /* Panel Table */
+        .panel-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem;
+            margin: 1.2rem 0;
+        }
+        .panelist {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+        }
+        .panelist .name {
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+        .panelist .role {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-top: 0.1rem;
+        }
+        .panelist .co {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--accent3);
+            margin-top: 0.2rem;
+        }
+
+        /* Quotes */
+        .quote-block {
+            border-left: 3px solid var(--accent);
+            padding: 1rem 1.2rem;
+            margin: 1.2rem 0;
+            background: rgba(124,92,252,0.05);
+            border-radius: 0 10px 10px 0;
+        }
+        .quote-block p {
+            color: var(--text);
+            font-size: 0.92rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+        .quote-block .attribution {
+            font-size: 0.78rem;
+            color: var(--accent);
+            margin-top: 0.5rem;
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        /* Insight Box */
+        .insight-box {
+            background: linear-gradient(135deg, rgba(124,92,252,0.08), rgba(78,205,196,0.08));
+            border: 1px solid rgba(124,92,252,0.2);
+            border-radius: 14px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .insight-box .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent3);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.5rem;
+        }
+        .insight-box p { color: var(--text); font-size: 0.9rem; opacity: 0.85; }
+
+        /* Photo Grid */
+        .photo-mosaic {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 180px;
+            gap: 6px;
+            margin: 1.5rem 0;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .photo-mosaic img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s, filter 0.3s;
+            filter: brightness(0.85);
+        }
+        .photo-mosaic img:hover {
+            transform: scale(1.03);
+            filter: brightness(1);
+        }
+        .photo-mosaic .span-2 { grid-column: span 2; }
+        .photo-mosaic .tall { grid-row: span 2; }
+
+        /* Stats Strip */
+        .stats-strip {
+            display: flex;
+            gap: 0;
+            margin: 2.5rem 0;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .stats-strip .stat {
+            flex: 1;
+            padding: 1.3rem;
+            text-align: center;
+            border-right: 1px solid var(--border);
+        }
+        .stats-strip .stat:last-child { border-right: none; }
+        .stats-strip .number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .stats-strip .stat:nth-child(1) .number { color: var(--accent); }
+        .stats-strip .stat:nth-child(2) .number { color: var(--accent2); }
+        .stats-strip .stat:nth-child(3) .number { color: var(--accent3); }
+        .stats-strip .stat:nth-child(4) .number { color: var(--accent4); }
+        .stats-strip .stat-label {
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin-top: 0.15rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Section headers */
+        .section-header {
+            margin: 3.5rem 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        .section-header .line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+
+        /* Theme cards */
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+        .theme-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.5rem;
+            transition: border-color 0.3s, transform 0.2s;
+        }
+        .theme-card:hover {
+            border-color: rgba(124,92,252,0.3);
+            transform: translateY(-2px);
+        }
+        .theme-card .icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+        .theme-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+        .theme-card p {
+            font-size: 0.82rem;
+            color: var(--muted);
+            line-height: 1.5;
         }
 
         /* Footer */
         footer {
             border-top: 1px solid var(--border);
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             text-align: center;
             font-size: 0.8rem;
             color: var(--muted);
+            position: relative;
+            z-index: 1;
         }
         footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
 
         /* Lightbox */
         .lightbox {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -261,195 +408,217 @@
         }
         .lightbox.active { display: flex; }
         .lightbox img {
-            max-width: 90%;
+            max-width: 92%;
             max-height: 90vh;
-            border-radius: 8px;
+            border-radius: 10px;
         }
 
         /* Mobile */
         @media (max-width: 640px) {
-            .hero h1 { font-size: 2rem; }
-            .stats { grid-template-columns: repeat(2, 1fr); }
-            .photo-grid { grid-template-columns: 1fr; }
-            .photo-grid .photo-wide { grid-column: span 1; }
-            .photo-grid .photo-wide img { height: 200px; }
+            .hero h1 { font-size: 2.2rem; }
+            .panel-grid { grid-template-columns: 1fr; }
+            .themes-grid { grid-template-columns: 1fr; }
+            .stats-strip { flex-wrap: wrap; }
+            .stats-strip .stat { flex: 1 1 50%; border-bottom: 1px solid var(--border); }
+            .photo-mosaic { grid-template-columns: 1fr 1fr; grid-auto-rows: 150px; }
+            .photo-mosaic .span-2 { grid-column: span 2; }
+            .hero .meta-row { gap: 1rem; }
         }
-
-        /* Update log */
-        .update-log {
-            font-size: 0.85rem;
-            color: var(--muted);
-            border-left: 2px solid var(--border);
-            padding-left: 1rem;
-        }
-        .update-log .date { font-weight: 600; color: var(--text); }
     </style>
 </head>
 <body>
 
+<div class="bg-glow"></div>
+
 <nav>
-    <div class="brand"><a href="https://agentic-sciences.github.io/AgenticSciences/">Agentic Sciences</a></div>
+    <div class="brand">
+        <div class="live-dot"></div>
+        GDC 2026 LIVE
+    </div>
     <div class="links">
         <a href="#sessions">Sessions</a>
-        <a href="#insights">Insights</a>
+        <a href="#themes">Themes</a>
         <a href="#photos">Photos</a>
-        <a href="#log">Log</a>
+        <a href="https://agentic-sciences.github.io/AgenticSciences/">Agentic Sciences ↗</a>
     </div>
 </nav>
 
 <div class="hero">
-    <div class="badge">Live from San Francisco</div>
+    <div class="day-badge">● LIVE — DAY 1 of 5</div>
     <h1>GDC 2026<br>Field Notes</h1>
-    <p class="subtitle">Real-time research notes from the Game Developers Conference — where AI meets game creation.</p>
-    <p class="meta">March 9–13, 2026 · Moscone Center, San Francisco · Qihong Ruan, Agentic Sciences</p>
+    <p class="subtitle">Live research journal from the world's largest game developer conference. AI transcribed. Real-time updated.</p>
+    <div class="meta-row">
+        <span>📍 Moscone Center, SF</span>
+        <span>📅 March 9–13, 2026</span>
+        <span>🎫 Qihong Ruan · Agentic Sciences</span>
+    </div>
 </div>
 
 <div class="container">
 
-    <!-- Stats -->
-    <div class="stats">
+    <div class="stats-strip">
         <div class="stat">
-            <div class="number">5</div>
-            <div class="label">Days</div>
+            <div class="number">1</div>
+            <div class="stat-label">Sessions Covered</div>
         </div>
         <div class="stat">
-            <div class="number">30K+</div>
-            <div class="label">Attendees</div>
+            <div class="number">4</div>
+            <div class="stat-label">Video Clips</div>
         </div>
         <div class="stat">
-            <div class="number">700+</div>
-            <div class="label">Sessions</div>
+            <div class="number">10</div>
+            <div class="stat-label">Photos</div>
         </div>
         <div class="stat">
-            <div class="number">500+</div>
-            <div class="label">Partners</div>
+            <div class="number">4</div>
+            <div class="stat-label">Key Quotes</div>
         </div>
     </div>
 
-    <!-- Session 1 -->
-    <div class="section" id="sessions">
+    <!-- Sessions -->
+    <div class="section-header" id="sessions">
         <h2>Session Notes</h2>
-        <p class="section-desc">Key sessions attended with AI-transcribed notes and analysis.</p>
+        <div class="line"></div>
+    </div>
 
-        <div class="card">
-            <div class="speaker">Day 1 · Monday, March 9</div>
-            <h3>🎮 How AI is Reshaping Game Creation</h3>
-            <p><span class="tag">AI</span><span class="tag">Game Dev</span><span class="tag">Unity</span><span class="tag">Google Cloud</span></p>
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-time">MON MAR 9 · 10:00 AM PT</div>
+            <div class="card">
+                <h3>🎮 How AI is Reshaping Game Creation</h3>
+                <div class="tags">
+                    <span class="tag tag-ai">AI/ML</span>
+                    <span class="tag tag-google">Google Cloud</span>
+                    <span class="tag tag-ea">EA</span>
+                    <span class="tag tag-sony">Sony</span>
+                    <span class="tag tag-unity">Unity</span>
+                </div>
 
-            <table class="panel-table">
-                <thead>
-                    <tr><th>Panelist</th><th>Role</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Catherine Hawayek</td><td>Head of Google Cloud for Games</td></tr>
-                    <tr><td>Jeff Skelton</td><td>VP of Technology & Partnerships, EA</td></tr>
-                    <tr><td>Muneki Shimada</td><td>VP, Developer Technology Group, Sony Interactive Entertainment</td></tr>
-                    <tr><td>Adam Smith</td><td>SVP Product — Engine, Unity</td></tr>
-                </tbody>
-            </table>
+                <div class="panel-grid">
+                    <div class="panelist">
+                        <div class="name">Catherine Hawayek</div>
+                        <div class="role">Head of Google Cloud for Games</div>
+                        <div class="co">Google</div>
+                    </div>
+                    <div class="panelist">
+                        <div class="name">Jeff Skelton</div>
+                        <div class="role">VP Technology & Partnerships</div>
+                        <div class="co">EA</div>
+                    </div>
+                    <div class="panelist">
+                        <div class="name">Muneki Shimada</div>
+                        <div class="role">VP Developer Technology Group</div>
+                        <div class="co">Sony Interactive</div>
+                    </div>
+                    <div class="panelist">
+                        <div class="name">Adam Smith</div>
+                        <div class="role">SVP Product — Engine</div>
+                        <div class="co">Unity</div>
+                    </div>
+                </div>
 
-            <h4 style="font-size: 0.95rem; margin-top: 1.5rem; margin-bottom: 0.8rem;">Key Takeaways</h4>
+                <div class="quote-block">
+                    <p>"The traditional seven stages of game development — creative, prototype, green light, pre-production, production, live operations — have been collapsed down into three phases."</p>
+                    <div class="attribution">Unity — on AI compressing the dev pipeline</div>
+                </div>
 
-            <blockquote>
-                "The traditional seven stages of game development — creative, prototype, green light, pre-production, production, live operations — have been collapsed down into three phases."
-            </blockquote>
-            <p style="font-size: 0.82rem; color: var(--muted);">— Unity representative on how AI compresses the development pipeline</p>
+                <div class="quote-block">
+                    <p>"Non-engineers are coming to me saying 'I'm able to do this!' They sat down one afternoon and figured out a tool that would have taken engineering a month. They did it in an hour. That's a whole different type of personal power."</p>
+                    <div class="attribution">On AI democratizing game development</div>
+                </div>
 
-            <blockquote>
-                "Non-engineers are coming to me saying 'I'm able to do this!' They sat down one afternoon and figured out a tool that would have taken engineering a month. They did it in an hour. That's a whole different type of personal power."
-            </blockquote>
-            <p style="font-size: 0.82rem; color: var(--muted);">— On AI democratizing game development tooling</p>
+                <div class="quote-block">
+                    <p>"Through conversations with game developers globally — many different roles, many different regions — I've seen a growing number of studios actively incorporating AI into their production workflow."</p>
+                    <div class="attribution">Muneki Shimada · Sony Interactive Entertainment</div>
+                </div>
 
-            <blockquote>
-                "Through conversations with game developers globally — many different roles, many different regions — I've seen a growing number of studios actively incorporating AI into their production workflow and operations."
-            </blockquote>
-            <p style="font-size: 0.82rem; color: var(--muted);">— Muneki Shimada, Sony Interactive Entertainment</p>
+                <div class="quote-block">
+                    <p>"Almost anybody now can take an engine like Unity and 3D tools to build a playable vertical slice."</p>
+                    <div class="attribution">On the lowering barrier to game prototyping</div>
+                </div>
 
-            <blockquote>
-                "Almost anybody now can take an engine like Unity and 3D tools to build a playable vertical slice."
-            </blockquote>
-            <p style="font-size: 0.82rem; color: var(--muted);">— On the lowering barrier to game prototyping</p>
+                <div class="insight-box">
+                    <div class="label">↗ Cross-Domain Insight</div>
+                    <p>This "compression effect" mirrors quantitative finance — AI collapses the research-to-production cycle just as it collapses game dev stages. Non-engineers building tools in hours instead of months is the same pattern we see with analysts now prototyping trading strategies without dedicated quant devs.</p>
+                </div>
+            </div>
+        </div>
 
-            <div class="insight">
-                <div class="insight-label">💡 Cross-Domain Insight</div>
-                <p>The pattern of AI empowering non-engineers mirrors what's happening in quantitative finance — analysts and PMs can now build strategy prototypes that previously required dedicated quant developers. The "7 stages → 3 stages" compression applies to research workflows too.</p>
+        <!-- Placeholder for future sessions -->
+        <div class="timeline-item" style="opacity: 0.4;">
+            <div class="timeline-time">MORE SESSIONS COMING...</div>
+            <div class="card" style="border-style: dashed;">
+                <h3>📡 Day 1 continues</h3>
+                <p>Additional sessions and notes will be added throughout GDC 2026. Check back for real-time updates.</p>
             </div>
         </div>
     </div>
 
-    <!-- Insights -->
-    <div class="section" id="insights">
+    <!-- Themes -->
+    <div class="section-header" id="themes">
         <h2>Emerging Themes</h2>
-        <p class="section-desc">Patterns and cross-domain connections observed on the ground.</p>
+        <div class="line"></div>
+    </div>
 
-        <div class="card">
-            <h3>🔄 The Compression Effect</h3>
-            <p>Multiple speakers described the same phenomenon: AI doesn't just speed up individual steps — it collapses entire phases of production. Unity's framework going from 7 stages to 3 is emblematic of a broader trend across creative industries.</p>
+    <div class="themes-grid">
+        <div class="theme-card">
+            <div class="icon">🔄</div>
+            <h4>The Compression Effect</h4>
+            <p>AI doesn't speed up steps — it eliminates entire phases. Unity's 7→3 stage collapse is the headline, but the pattern is everywhere.</p>
         </div>
-
-        <div class="card">
-            <h3>⚡ Democratization of Creation</h3>
-            <p>The most emotionally charged moment came when a panelist described non-engineers building internal tools in hours instead of waiting months. This "personal power" narrative was the strongest audience reaction of the session. Packed room (~300 people, 80-90% capacity).</p>
+        <div class="theme-card">
+            <div class="icon">⚡</div>
+            <h4>Personal Power</h4>
+            <p>The most charged moment: non-engineers building production tools in hours. This is the real disruption — not faster code, but new creators.</p>
         </div>
-
-        <div class="card">
-            <h3>🌏 Global Adoption Signal</h3>
-            <p>Sony's Shimada confirmed from a platform perspective: studios worldwide, across roles and regions, are actively incorporating AI into production. The platform holders are watching and enabling, not resisting.</p>
+        <div class="theme-card">
+            <div class="icon">🌏</div>
+            <h4>Global Adoption</h4>
+            <p>Sony confirms: studios worldwide are actively integrating AI into production. The platform holders are enabling, not resisting.</p>
         </div>
     </div>
 
     <!-- Photos -->
-    <div class="section" id="photos">
+    <div class="section-header" id="photos">
         <h2>From the Floor</h2>
-        <p class="section-desc">Scenes from GDC 2026, Moscone Center.</p>
-
-        <div class="photo-grid">
-            <div class="photo-wide">
-                <img src="images/gdc_297.jpg" alt="Main stage packed audience" onclick="openLightbox(this)" loading="lazy">
-            </div>
-            <div>
-                <img src="images/gdc_294.jpg" alt="How AI is Reshaping Game Creation panel slide" onclick="openLightbox(this)" loading="lazy">
-            </div>
-            <div>
-                <img src="images/gdc_299.jpg" alt="Agentic Sciences badge" onclick="openLightbox(this)" loading="lazy">
-            </div>
-            <div>
-                <img src="images/gdc_291.jpg" alt="Session audience" onclick="openLightbox(this)" loading="lazy">
-            </div>
-            <div>
-                <img src="images/gdc_296.jpg" alt="Crowd in session hall" onclick="openLightbox(this)" loading="lazy">
-            </div>
-            <div class="photo-wide">
-                <img src="images/gdc_300.jpg" alt="Badge pickup registration area" onclick="openLightbox(this)" loading="lazy">
-            </div>
-            <div>
-                <img src="images/gdc_298.jpg" alt="JetBrains booth" onclick="openLightbox(this)" loading="lazy">
-            </div>
-            <div>
-                <img src="images/gdc_295.jpg" alt="GDC Festival of Gaming branding" onclick="openLightbox(this)" loading="lazy">
-            </div>
-        </div>
+        <div class="line"></div>
     </div>
 
-    <!-- Update Log -->
-    <div class="section" id="log">
+    <div class="photo-mosaic">
+        <img class="span-2" src="images/gdc_297.jpg" alt="Main stage packed audience" onclick="openLightbox(this)" loading="lazy">
+        <img src="images/gdc_294.jpg" alt="AI panel slide" onclick="openLightbox(this)" loading="lazy">
+        <img src="images/gdc_299.jpg" alt="Agentic Sciences badge" onclick="openLightbox(this)" loading="lazy">
+        <img src="images/gdc_291.jpg" alt="Session audience" onclick="openLightbox(this)" loading="lazy">
+        <img src="images/gdc_298.jpg" alt="JetBrains booth" onclick="openLightbox(this)" loading="lazy">
+        <img class="span-2" src="images/gdc_300.jpg" alt="Registration area" onclick="openLightbox(this)" loading="lazy">
+        <img src="images/gdc_295.jpg" alt="GDC branding" onclick="openLightbox(this)" loading="lazy">
+        <img src="images/gdc_296.jpg" alt="Crowd" onclick="openLightbox(this)" loading="lazy">
+        <img src="images/gdc_292.jpg" alt="Audience alternate angle" onclick="openLightbox(this)" loading="lazy">
+    </div>
+
+    <!-- Log -->
+    <div class="section-header" id="log">
         <h2>Update Log</h2>
-        <p class="section-desc">This page is updated in real-time throughout GDC 2026.</p>
-        <div class="update-log">
-            <p><span class="date">March 9, Day 1</span> — Initial publish. Covered "How AI is Reshaping Game Creation" panel (Google Cloud, EA, Sony, Unity). 10 photos from the floor. More sessions coming.</p>
-        </div>
+        <div class="line"></div>
+    </div>
+
+    <div class="card" style="font-size: 0.85rem;">
+        <p style="color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; margin-bottom: 0.4rem;">2026-03-09T10:30:00-07:00</p>
+        <p>Day 1 — Initial publish. "How AI is Reshaping Game Creation" panel with Google Cloud, EA, Sony, and Unity. 10 photos, 4 video clips transcribed via Gemini 3.1 Pro. Crowd estimate: 200-300+, ~90% capacity.</p>
     </div>
 
 </div>
 
 <footer>
-    <p><strong>Agentic Sciences</strong> · GDC 2026 Field Notes</p>
-    <p style="margin-top: 0.3rem;">
+    <p style="font-size: 0.9rem; color: var(--text); margin-bottom: 0.4rem;"><strong>Agentic Sciences</strong> × GDC 2026</p>
+    <p>
         <a href="https://agentic-sciences.github.io/AgenticSciences/">Main Site</a> ·
         <a href="https://x.com/Qihong53030163">Twitter/X</a> ·
         <a href="https://github.com/Agentic-Sciences">GitHub</a>
     </p>
-    <p style="margin-top: 0.5rem; font-size: 0.75rem;">Audio transcriptions powered by Gemini. Notes captured and organized by ComeWealth AI.</p>
+    <p style="margin-top: 0.6rem; font-size: 0.72rem; color: #555;">
+        Audio/video transcriptions by Gemini 3.1 Pro · Notes organized by ComeWealth AI · Updated in real-time
+    </p>
 </footer>
 
 <!-- Lightbox -->
